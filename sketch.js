@@ -168,8 +168,47 @@ function draw() {
 
     // spawns platforms
     if (frameCount % 160 === 0) {
-      treasurePlatform();
-      powerUpPlatform();
+      var rand = Math.round(random(1, 10));
+      switch (rand) {
+        case 1:
+          enemyPlatform();
+          break;
+        case 2:
+          spawnPlatform();
+          break;
+        case 3:
+          spawnPlatform();
+          break;
+        case 4:
+          treasurePlatform();
+          break;
+        case 5:
+          enemyPlatform();
+          break;
+        case 6:
+          spawnPlatform();
+          break;
+        case 7:
+          enemyPlatform();
+          break;
+        case 8:
+          spawnPlatform();
+          break;
+        case 9:
+          enemyPlatform();
+          break;
+        case 10:
+          spawnPlatform();
+          break;
+        case 11:
+          powerUpPlatform();
+          break;
+        case 12:
+          powerUpPlatform();
+          break;
+        default:
+          break;
+      }
     }
 
     // powerUp picking up
@@ -289,7 +328,7 @@ function draw() {
 
   // speed managment
   // speed powerUp and normal speed at less than 1000 score
-  if (score > 1000) {
+  if (score < 1000) {
     if (powers === SPEED) {
       movement = -2.5;
     } else {
@@ -297,7 +336,7 @@ function draw() {
     }
   }
   // speed powerUp and normal speed at above 1001 score and below 2000 score
-  if (score < 1001 && score > 2000) {
+  if (score > 1001 && score < 2000) {
     if (powers === SPEED) {
       movement = -2.75;
     } else {
@@ -305,7 +344,7 @@ function draw() {
     }
   }
   // speed powerUp and normal speed at above 2001 score and below 5000 score
-  if (score < 2001 && score > 5000) {
+  if (score > 2001 && score < 5000) {
     if (powers === SPEED) {
       movement = -3;
     } else {
@@ -313,7 +352,7 @@ function draw() {
     }
   }
   // speed powerUp and normal speed at above 5001 score and below 10000 score
-  if (score < 5001 && score > 1000) {
+  if (score > 5001 && score < 1000) {
     if (powers === SPEED) {
       movement = -3.25;
     } else {
@@ -321,7 +360,7 @@ function draw() {
     }
   }
   // speed powerUp and normal speed at above 10000 score
-  if (score < 10000) {
+  if (score > 10000) {
     if (powers === SPEED) {
       movement = -3.25 + (score / 0.0025);
     } else {
