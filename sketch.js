@@ -54,7 +54,7 @@ function setup() {
 
   // frameRate
   frameRate(60);
-  
+
   // Groups
   platformGroup = new Group();
   platformEnemyGroup = new Group();
@@ -84,7 +84,7 @@ function setup() {
   firstPlatform.velocityX = movement;
   firstPlatform.lifetime = 600;
   platformGroup.add(firstPlatform);
-  
+
   gameOver = createSprite(400, 300);
   var rand = Math.round(random(1, 3));
   switch (rand) {
@@ -101,16 +101,17 @@ function setup() {
       break;
   }
   gameOver.visible = false;
-  
+
   restart = createSprite(550, 200);
   restart.addImage("restart", restartImage);
   restart.scale = 2;
   restart.visible = false;
 }
+
 function draw() {
   // edges
   edges = createEdgeSprites();
-  
+
   // gameStates
   if (gameState === PLAY) {
     // controls
@@ -120,13 +121,13 @@ function draw() {
     }
     // moving left with left arrow key
     if (keyDown(LEFT_ARROW)) {
-      explorer.x = explorer.x - (5 * -(movement+1));
+      explorer.x = explorer.x - (5 * -(movement + 1));
       explorer.addImage(explorerImage2);
       imageNumber = 0;
     }
     // moving right with right arrow key
     if (keyDown(RIGHT_ARROW)) {
-      explorer.x = explorer.x + (5 * -(movement+1));
+      explorer.x = explorer.x + (5 * -(movement + 1));
       explorer.addImage(explorerImage1);
       imageNumber = 1;
     }
@@ -134,14 +135,14 @@ function draw() {
     if (powers === BOOMERRANG && powersTimer === 19) {
       if (imageNumber === 1) {
         boomerangSprite = createSprite(explorer.x, explorer.y, 20, 20);
-      boomerangSprite.addImage(boomerangImage1);
-      boomerangSprite.scale = 2;
-      boomerangSprite.velocityX = 4;
-        
+        boomerangSprite.addImage(boomerangImage1);
+        boomerangSprite.scale = 2;
+        boomerangSprite.velocityX = 4;
+
       } else {
         boomerangSprite = createSprite(explorer.x, explorer.y, 20, 20);
-      boomerangSprite.addImage(boomerangImage2);
-      boomerangSprite.scale = 2;
+        boomerangSprite.addImage(boomerangImage2);
+        boomerangSprite.scale = 2;
         boomerangSprite.velocityX = -4;
       }
       boomerangs.add(boomerangSprite);
@@ -150,10 +151,10 @@ function draw() {
       powersTimer = 0;
       powers = NONE;
       if (boomerangSprite.collide(enemies)) {
-      enemies.destroyEach();
+        enemies.destroyEach();
+      }
     }
-    }
-    
+
 
     // gravity
     if (explorer.velocityY < 6) {
@@ -164,17 +165,17 @@ function draw() {
     if (lava.x < 300) {
       lava.x = 400;
     }
-    
+
     // spawns platforms
     if (frameCount % 160 === 0) {
       treasurePlatform();
       powerUpPlatform();
     }
-    
+
     // powerUp picking up
     if (explorer.isTouching(powerUps)) {
-        powerUps.destroyEach();
-      
+      powerUps.destroyEach();
+
       if (effect === 1) {
         powers = INVINCIBILITY;
       } else if (effect === 2) {
@@ -184,15 +185,15 @@ function draw() {
       } else if (effect === 4) {
         powers = BOOMERRANG;
       }
-      
-        powersTimer = 20;
-      }
-    
+
+      powersTimer = 20;
+    }
+
     // powersTimer
     if (powers === NONE) {
       console.log("NONE");
     } else {
-      powersTimer = powersTimer - (1/16);
+      powersTimer = powersTimer - (1 / 16);
     }
     if (powersTimer < 0) {
       powers = NONE;
@@ -200,9 +201,9 @@ function draw() {
 
     // treasures picking up
     if (explorer.isTouching(treasures)) {
-      score = score+1000;
+      score = score + 1000;
       treasure2 = createSprite(treasure.x, treasure.y);
-    treasures.destroyEach();
+      treasures.destroyEach();
       treasure2.addImage(treasureOpen);
       treasure2.scale = 0.05;
       treasure2.velocityX = movement;
@@ -210,11 +211,20 @@ function draw() {
       treasures2.add(treasure2);
       gameOver.depth = treasure2.depth + 1;
       restart.depth = gameOver.depth + 1;
-      
+
     }
-    
+
     // score
-    score = score + Math.round(getFrameRate()/120);
+    score = score + Math.round(getFrameRate() / 120);
+
+    platformGroup.setVelocityXEach(movement);
+    platformEnemyGroup.setVelocityXEach(movement);
+    platformTreasureGroup.setVelocityXEach(movement);
+    platformPowerUpGroup.setVelocityXEach(movement);
+    enemies.setVelocityXEach(movement);
+    treasures.setVelocityXEach(movement);
+    treasures2.setVelocityXEach(movement);
+    powerUps.setVelocityXEach(movement);
 
     // lose
     if (explorer.collide(enemies) || explorer.collide(lava) || explorer.collide(edges[0])) {
@@ -224,16 +234,16 @@ function draw() {
         explorer.y = 100;
         explorer.velocityX = -20;
       } else {
-      gameState = END;
-      explorer.velocityY = 0;
+        gameState = END;
+        explorer.velocityY = 0;
       }
     }
   } else if (gameState === END) {
-  restart.depth = gameOver.depth +1;
-    
-    
-    
-    
+    restart.depth = gameOver.depth + 1;
+
+
+
+
     // making velocity 0
     platformGroup.setVelocityXEach(0);
     platformEnemyGroup.setVelocityXEach(0);
@@ -256,7 +266,7 @@ function draw() {
     treasures2.setLifetimeEach(-1);
     powerUps.setLifetimeEach(-1);
     boomerangs.setLifetimeEach(-1);
-    
+
     // making gameOver and restart visible
     gameOver.visible = true;
     restart.visible = true;
@@ -277,19 +287,54 @@ function draw() {
   explorer.collide(edges[1]);
   explorer.collide(edges[2]);
 
-    // speed powerUp
-  if (powers === SPEED) {
+  // speed managment
+  // speed powerUp and normal speed at less than 1000 score
+  if (score > 1000) {
+    if (powers === SPEED) {
       movement = -2.5;
     } else {
       movement = -2;
     }
-  
+  }
+  // speed powerUp and normal speed at above 1001 score and below 2000 score
+  if (score < 1001 && score > 2000) {
+    if (powers === SPEED) {
+      movement = -2.75;
+    } else {
+      movement = -2.25;
+    }
+  }
+  // speed powerUp and normal speed at above 2001 score and below 5000 score
+  if (score < 2001 && score > 5000) {
+    if (powers === SPEED) {
+      movement = -3;
+    } else {
+      movement = -2.5;
+    }
+  }
+  // speed powerUp and normal speed at above 5001 score and below 10000 score
+  if (score < 5001 && score > 1000) {
+    if (powers === SPEED) {
+      movement = -3.25;
+    } else {
+      movement = -2.75;
+    }
+  }
+  // speed powerUp and normal speed at above 10000 score
+  if (score < 10000) {
+    if (powers === SPEED) {
+      movement = -3.25 + (score / 0.0025);
+    } else {
+      movement = -2.75 + (score / 0.0025);
+    }
+  }
+
   explorer.velocityX = 0;
 
   fill("white");
   textSize(20);
-  text("Score: "+score, 50, 50);
-  
+  text("Score: " + score, 50, 50);
+
   drawSprites();
 }
 
@@ -349,7 +394,7 @@ function enemyPlatform() {
   platformEnemy.lifetime = 525;
   enemy.lifetime = 525;
 
-// depth
+  // depth
   platformEnemy.depth = gameOver.depth;
   enemy.depth = platformEnemy.depth - 1;
   gameOver.depth = gameOver.depth + 1;
@@ -398,7 +443,7 @@ function treasurePlatform() {
   platformTreasure.lifetime = 600;
   treasure.lifetime = 600;
 
-// depth
+  // depth
   platformTreasure.depth = gameOver.depth;
   treasure.depth = platformTreasure.depth - 1;
   enemy.depth = treasure.depth - 1;
@@ -414,7 +459,7 @@ function powerUpPlatform() {
   platformPowerUp = createSprite(800, 120, 250, 10);
   platformPowerUp.y = Math.round(random(250, 350));
   powerUp = createSprite(800, platformPowerUp.y - 35, 40, 40);
-  
+
   var rand = Math.round(random(1, 4));
   switch (rand) {
     case 1:
@@ -455,7 +500,7 @@ function powerUpPlatform() {
   platformPowerUp.lifetime = 525;
   powerUp.lifetime = 525;
 
-// depth
+  // depth
   platformPowerUp.depth = gameOver.depth;
   powerUp.depth = platformPowerUp.depth - 1;
   gameOver.depth = gameOver.depth + 1;
@@ -466,22 +511,22 @@ function powerUpPlatform() {
   powerUps.add(powerUp);
 }
 
-function reset(){
+function reset() {
   gameState = PLAY;
-  
+
   gameOver.visible = false;
   restart.visible = false;
-  
-    platformGroup.destroyEach();
-    platformEnemyGroup.destroyEach();
-    platformTreasureGroup.destroyEach();
-    platformPowerUpGroup.destroyEach();
-    enemies.destroyEach();
-    treasures.destroyEach();
+
+  platformGroup.destroyEach();
+  platformEnemyGroup.destroyEach();
+  platformTreasureGroup.destroyEach();
+  platformPowerUpGroup.destroyEach();
+  enemies.destroyEach();
+  treasures.destroyEach();
   treasures2.destroyEach();
-    powerUps.destroyEach();
-    boomerangs.destroyEach();
-  
+  powerUps.destroyEach();
+  boomerangs.destroyEach();
+
   // explorer
   explorer.x = 600;
   explorer.y = 180;
@@ -493,14 +538,14 @@ function reset(){
   firstPlatform.velocityX = movement;
   firstPlatform.lifetime = 600;
   platformGroup.add(firstPlatform);
-  
+
   gameOver.depth = firstPlatform.depth + 1;
-  
-  
+
+
   score = 0;
-  
+
   lava.velocityX = movement;
-  
+
   var rand = Math.round(random(1, 3));
   switch (rand) {
     case 1:
