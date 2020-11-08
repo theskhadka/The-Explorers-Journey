@@ -168,7 +168,7 @@ function draw() {
 
     // spawns platforms
     if (frameCount % 160 === 0) {
-      var rand = Math.round(random(1, 10));
+      var rand = Math.round(random(1, 12));
       switch (rand) {
         case 1:
           enemyPlatform();
